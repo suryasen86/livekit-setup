@@ -1,0 +1,8 @@
+livekit
+livekit-agents
+livekit-api
+livekit-plugins-openai
+livekit-plugins-silero
+python-dotenv
+torch
+torchaudio
