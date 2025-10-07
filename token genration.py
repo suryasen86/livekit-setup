@@ -1,8 +1,11 @@
 from livekit import api
+from dotenv import load_dotenv
 
+load_dotenv()
+import os
 # Hardcoded API key and secret
-API_KEY = "mykey"
-API_SECRET = "mysecret"
+API_KEY = os.getenv("LIVEKIT_API_KEY")
+API_SECRET = os.getenv("LIVEKIT_API_SECRET")
 
 # Hardcoded participant and room
 IDENTITY = "test_user"

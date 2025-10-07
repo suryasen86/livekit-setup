@@ -46,9 +46,8 @@ if __name__ == "__main__":
     cli.run_app(
         WorkerOptions(
             entrypoint_fnc=entrypoint,
-            host="localhost",
-            port=7881,
-            api_key="mykey",
-            api_secret="mysecret"
+            ws_url=os.getenv("LIVEKIT_URL"),
+            api_key=os.getenv("LIVEKIT_API_KEY"),
+            api_secret=os.getenv("LIVEKIT_API_SECRET")
         )
     )
