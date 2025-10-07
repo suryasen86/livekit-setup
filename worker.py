@@ -36,7 +36,8 @@ async def entrypoint(ctx: JobContext):
         # any combination of STT, LLM, TTS, or realtime API can be used
         stt=openai.STT(model="gpt-4o-mini-transcribe", api_key=api_key),
         llm=openai.LLM(model="gpt-4o-mini", api_key=api_key),
-        tts=openai.TTS(api_key=api_key),
+        tts=openai.TTS(api_key=api_key,voice="alloy_female"),
+        
     )
 
     await session.start(agent=agent, room=ctx.room)
