@@ -3,3 +3,12 @@
 
 [agent]
   id = "CA_R7CVx44xuZ2t"
+
+[build]
+dockerfile = "Dockerfile"
+
+[env]
+API_KEY = "${API_KEY}"
+LIVEKIT_URL = "${LIVEKIT_URL}"
+LIVEKIT_API_KEY = "${LIVEKIT_API_KEY}"
+LIVEKIT_API_SECRET = "${LIVEKIT_API_SECRET}"
