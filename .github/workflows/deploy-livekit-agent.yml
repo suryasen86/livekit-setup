@@ -27,10 +27,15 @@ jobs:
             - name: Install LiveKit CLI
               run: |
                   echo "Installing LiveKit CLI..."
-                  # Download latest release directly from GitHub
-                  curl -L https://github.com/livekit/livekit-cli/releases/latest/download/livekit-cli-linux-amd64 -o livekit-cli
-                  chmod +x livekit-cli
-                  sudo mv livekit-cli /usr/local/bin/lk
+                  # Get the latest release info and download the correct binary
+                  LATEST_VERSION=$(curl -s https://api.github.com/repos/livekit/livekit-cli/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+                  echo "Latest version: $LATEST_VERSION"
+                  
+                  # Download and install
+                  curl -L "https://github.com/livekit/livekit-cli/releases/download/${LATEST_VERSION}/livekit-cli-${LATEST_VERSION}-linux-amd64.tar.gz" -o livekit-cli.tar.gz
+                  tar -xzf livekit-cli.tar.gz
+                  chmod +x lk
+                  sudo mv lk /usr/local/bin/lk
                   lk --version
 
             - name: Configure LiveKit Agent
