@@ -28,7 +28,6 @@ jobs:
               run: |
                   echo "Installing LiveKit CLI..."
                   curl -sSL https://get.livekit.io/cli | bash
-                  sudo mv lk /usr/local/bin/lk
                   lk version
 
             - name: Configure LiveKit Agent
