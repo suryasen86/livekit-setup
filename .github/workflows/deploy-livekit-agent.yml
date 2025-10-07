@@ -19,25 +19,18 @@ jobs:
               with:
                   python-version: "3.10"
 
-            - name: Install dependencies
-              run: |
-                  pip install -r requirements.txt
-                  pip install livekit livekit-agents python-dotenv
+
 
             - name: Install LiveKit CLI
               run: |
                   echo "Installing LiveKit CLI..."
-                  # Get the latest release info and download the correct binary
-                  LATEST_VERSION=$(curl -s https://api.github.com/repos/livekit/livekit-cli/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-                  echo "Latest version: $LATEST_VERSION"
-                  
-                  # Download and install
-                  curl -L "https://github.com/livekit/livekit-cli/releases/download/${LATEST_VERSION}/livekit-cli-${LATEST_VERSION}-linux-amd64.tar.gz" -o livekit-cli.tar.gz
-                  tar -xzf livekit-cli.tar.gz
-                  chmod +x lk
-                  sudo mv lk /usr/local/bin/lk
+                  curl -sSL https://get.livekit.io/cli | bash
                   lk --version
 
+            - name: Install dependencies
+              run: |
+                  pip install -r requirements.txt
+                  pip install livekit livekit-agents python-dotenv
             - name: Configure LiveKit Agent
               env:
                   LIVEKIT_API_KEY: ${{ secrets.LIVEKIT_API_KEY }}
