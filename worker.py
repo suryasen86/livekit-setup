@@ -21,7 +21,7 @@ async def lookup_weather(
 ):
     """Used to look up weather information."""
 
-    return {"weather": "sunny", "temperature": 70}
+    return {"weather": "sunny", "temperature": 50}
 
 
 async def entrypoint(ctx: JobContext):
