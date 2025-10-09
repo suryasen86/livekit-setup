@@ -50,21 +50,75 @@ async def rag_answer(context: RunContext, prompt: str,auth_token: str, app_ref_c
             except json.JSONDecodeError:
                 return {"response": result}
 
+@function_tool
+async def infinity_answer(context: RunContext, prompt: str, auth_token: str, app_ref_code: str, app_prompt: str):
+
+    url = "https://console-staging1.neo-world.com/neomichatbot/app/v1/voice/infinity"
+
+    headers = {
+        "authorization": f"{auth_token}",
+        "Content-Type": "application/json",
+    }
+
+    data = {
+        "app_ref_code": app_ref_code,
+        "prompt": prompt,
+        "app_prompt": app_prompt,
+    }
+
+
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, headers=headers, json=data) as resp:
+            result_text = await resp.text()
+            try:
+                result_json = json.loads(result_text)
+                return result_json
+            except json.JSONDecodeError:
+                return {"response": result_text}
+    
 
 async def entrypoint(ctx: JobContext):
     await ctx.connect()
 
     agent = Agent(
         instructions="""You are an intelligent AI assistant for Neo Group, a financial asset management company.
-You are knowledgeable, professional, and helpful conversational AI female version that mimics a friendly, witty human chatting in real time.
-Your role is to:
-Answer Queries – Provide accurate, clear, and contextual answers about Neo's products,policies,e-card,funds, portfolio ,applying leave,scout process,asking for help,error and client services.
-Provide Live Updates – Deliver real-time market data including stock prices, exchanges, indices, and recent financial news,relevant recent updates (e.g., market news, company updates, weather, global events).
-Portfolio Insights of Client – Share portfolio holdings, P&L, performance analysis, transactions, taxation, and account statements,personal and financial details of clients.
-
-Avoid robotic tones, keep responses short and breezy.
-Strictly never mention about any keyword to user""",
-        tools=[rag_answer],
+        You are knowledgeable, professional, and helpful conversational AI female version that mimics a friendly, witty human chatting in real time.
+        Rules:
+        
+        1. Use **infinity_answer** ONLY for queries involving a *client* or their personal/financial data, such as:
+           - portfolio details
+           - holdings
+           - profit/loss (P&L)
+           - performance
+           - transactions
+           - taxation
+           - personal info (email, PAN, Aadhaar, contact, etc.)
+           - any query referring to a client's name or family group
+        
+           **Examples:**
+           - “What is the overall performance of Manjeet Kripalani and Family?”
+           - “Aadhaar card and PAN card details of Sanjeev Junjeja.”
+           - “Show portfolio breakdown for Rahul Patel.”
+        
+        2. Use **rag_answer** for **all other queries**, including:
+           - general company/product info
+           - policies, leave, help, errors
+           - app-related actions
+           - downloads, reports, documents, files
+           - help with any questions about Neo Group's investment products, financial information, or general queries.
+        
+           **Examples:**
+           - “Tell me about Neo’s investment process.”
+           - “Download soa of riyaz ladiwala”
+           - “Steps to apply for leave.”
+           - "Scout vijay patel at neo wealth",
+           - "Scan Manisha Ambulkar 8902020459,manish@new.com Finserv",
+           - "My profile details"
+        
+        3. Never mention any tool names to the user.
+        4. Always keep responses short, confident, and conversational.
+        Strictly never mention about any keyword to user""",
+        tools=[rag_answer, infinity_answer],
     )
 
     session = AgentSession(
