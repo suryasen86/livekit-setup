@@ -25,18 +25,18 @@ LIVEKIT_API_SECRET = os.getenv("LIVEKIT_API_SECRET")
 
 
 @function_tool
-async def rag_answer(context: RunContext, prompt: str):
+async def rag_answer(context: RunContext, prompt: str,auth_token: str, app_ref_code: str):
     """
     Fetches RAG-based response for a given user prompt using Neo-world API.
     """
     url = "https://console-staging1.neo-world.com/neomichatbot/app/v1/voice/rag"
     headers = {
-        "authorization": "Bearer ory_st_2hGwYWSr6X0ty9WPb5kj6NTFQ2RFGHCl",
+        "authorization": f"{auth_token}",
         "Content-Type": "application/json",
     }
 
     data = {
-        "app_ref_code": str(uuid.uuid4())[:8],  # random short code
+        "app_ref_code": app_ref_code, # random short code
         "prompt": prompt,
         "app_prompt": prompt,
     }
